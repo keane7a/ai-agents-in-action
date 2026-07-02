@@ -1,6 +1,4 @@
-from agents import Agent, Runner, AsyncOpenAI, OpenAIChatCompletionsModel
-from dotenv import load_dotenv
-import os
+from agents import Agent, Runner
 from setup_openai import model
 
 # Building the agent. 

@@ -2,7 +2,7 @@ from pydantic import BaseModel, ConfigDict
 from typing import Dict
 from typing_extensions import TypedDict
 from setup_openai import model
-from agents import Agent, Runner, AgentOutputSchema
+from agents import Agent, Runner
 
 # Agent instruction
 instructions = """
