@@ -1,4 +1,4 @@
-from agents import Agent, Runner, AsyncOpenAI, OpenAIChatCompletionsModel
+from agents import Agent, Runner, AsyncOpenAI, OpenAIChatCompletionsModel, ModelSettings
 from dotenv import load_dotenv
 import os
 
@@ -30,7 +30,14 @@ You are a research planning assistant.
 agent = Agent(
     name="Research Planner", 
     instructions=instructions, 
-    model=model
+    model=model,
+    model_settings=ModelSettings(
+        temperature=1,
+        max_tokens=150,
+        top_p=1, 
+        # frequency_penalty=0.5,
+        # presence_penalty=0.5
+    )
 )
 
 input = "learn about AI agents"
