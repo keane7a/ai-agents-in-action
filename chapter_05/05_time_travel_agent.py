@@ -3,6 +3,7 @@ from agents import Agent, Runner, function_tool
 from agents.mcp import MCPServerStdio
 from setup_openai import model
 
+
 @function_tool
 def travel_back(year: int, years: int) -> str:
     """
@@ -36,7 +37,7 @@ async def main():
         After using a tool, reflect on the result and continue reasoning. 
         After gathering information, provide the final answer.
     """
-    
+
     agent = Agent(
         model=model,
         name="Time Travel Agent",
@@ -44,7 +45,7 @@ async def main():
         tools=[travel_back, travel_forward],
         mcp_servers=[thinking_srv],
     )
-    
+
     async with thinking_srv:
         time_travel_problem = """
             In a sci-fi film, Alex is a time traveler who decides to go back in time

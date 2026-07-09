@@ -18,17 +18,18 @@ SANDBOX = os.path.dirname(os.path.abspath(__file__))
 SCRIPT = Path(__file__).with_name("01_research_tools_mcp_server.py").resolve()
 
 
-class ResearchPlanModel(BaseModel): 
+class ResearchPlanModel(BaseModel):
     """Output model for the research plan."""
 
     research_plan: str
     """The final research plan as text."""
     is_sufficiently_detailed: bool
     """Flag to indicate if the research plan is sufficiently detailed."""
-    
+
+
 research_plan_guardrail_agent = Agent(
     model=model,
-    name="Research Plan Guardrail Agent", 
+    name="Research Plan Guardrail Agent",
     instructions="""
     You are an output guardrail agent. 
     Confirm the research plan is sufficiently detailed, at least 1000 charaters in length.
@@ -37,35 +38,36 @@ research_plan_guardrail_agent = Agent(
     output_type=ResearchPlanModel,
 )
 
+
 @output_guardrail
 async def research_plan_guardrail(
     ctx: RunContextWrapper, agent: Agent, output: ResearchPlanModel
-) -> GuardrailFunctionOutput: 
+) -> GuardrailFunctionOutput:
     result = await Runner.run(
         research_plan_guardrail_agent, output.research_plan, context=ctx.context
     )
-    
+
     return GuardrailFunctionOutput(
-        output_info=result.final_output, 
+        output_info=result.final_output,
         tripwire_triggered=result.final_output.is_sufficiently_detailed,
     )
 
 
-async def main(): 
-    # Init agent 
+async def main():
+    # Init agent
     research_agent = Agent(
         model=model,
-        name="Research Agent", 
+        name="Research Agent",
         instructions="""
         You are a research assistant. 
         Your role is to find resarch sources. 
         Do not make up or invent any research sources. 
         Always hand off to the thinking agent. 
-        """
+        """,
     )
-    
+
     thinking_agent = Agent(
-        model=model, 
+        model=model,
         name="Thinking Agent",
         instructions="""
         You are a research planning assistant.
@@ -73,21 +75,21 @@ async def main():
         You will receive a list of research sources from the research agent.
         Use the sequentialThinking tool to create a research plan based on the sources.
         Always hand off to the filesystem agent.
-        """, 
+        """,
         output_type=ResearchPlanModel,
-        output_guardrails=[research_plan_guardrail]
+        output_guardrails=[research_plan_guardrail],
     )
-    
+
     filesystem_agent = Agent(
-        model=model, 
+        model=model,
         name="Filesystem Agent",
         instructions="""
         You are a filesystem assistant.
         Your role is to write the output as a text file.
         Never make up or invent any ouput.
-        """
+        """,
     )
-    
+
     # Init servers
     servers = [
         MCPServerStdio(
@@ -117,30 +119,30 @@ async def main():
         servers[0] as research_srv,
         servers[1] as thinking_srv,
         servers[2] as fs_srv,
-    ): 
+    ):
         goal = "Produce a research plan to find the book 'The Hitchhiker's Guide to the Galaxy'"
-        
+
         print("Running...", goal)
         research_agent.mcp_servers = [research_srv]
         result = await Runner.run(research_agent, goal)
         thinking_agent.mcp_servers = [thinking_srv]
         max_retries = 3
-        
-        for attempt in range(max_retries): 
-            try: 
+
+        for attempt in range(max_retries):
+            try:
                 result = await Runner.run(thinking_agent, result.final_output)
                 final_output = result.final_output.research_plan
             except OutputGuardrailTripwireTriggered as output_tripped:
                 final_output = output_tripped.guardrail_result.output.output_info
-            
-            if attempt == max_retries - 1:    
+
+            if attempt == max_retries - 1:
                 final_output = "A research plan was not generated. Please try again with a different goal."
                 break
-            
+
         filesystem_agent.mcp_servers = [fs_srv]
         result = await Runner.run(filesystem_agent, final_output)
         print(result.final_output)
-        
-        
+
+
 if __name__ == "__main__":
     asyncio.run(main())

@@ -57,7 +57,7 @@ async def main():
         If the answer is correct (0 days) provide the final answer and plan.
         If the answer is not correct, continue reasoning and try to find the correct answer.
     """
-    
+
     agent = Agent(
         model=model,
         name="Time Travel Agent",
@@ -80,7 +80,7 @@ async def main():
             witness the end of the end. Alex current year is 2050.
             How many days does Alex spend in the past before he sees the end of the event?
         """
-        
+
         print("Running...")
         result = await Runner.run(
             agent,

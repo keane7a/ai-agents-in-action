@@ -10,35 +10,35 @@ SANDBOX = os.path.dirname(os.path.abspath(__file__))
 SCRIPT = Path(__file__).with_name("01_research_tools_mcp_server.py").resolve()
 
 
-async def main(): 
-    # Instantiate agents 
+async def main():
+    # Instantiate agents
     research_agent = Agent(
-        model=model, 
-        name="Research Agent", 
+        model=model,
+        name="Research Agent",
         instructions="""
         You are a research assistant. 
         Your role is to find research sources. 
-        """,         
+        """,
     )
-    
+
     thinking_agent = Agent(
-        model=model, 
-        name="Thinking Agent", 
+        model=model,
+        name="Thinking Agent",
         instructions="""
         You are a research assistant. 
         Your role is to plan the research. 
         """,
-    ) 
-    
+    )
+
     filesystem_agent = Agent(
         model=model,
         name="Filesystem Agent",
         instructions="""
         You are a research assistant.
         Your role is to write the research plan as a text file.
-        """
+        """,
     )
-    
+
     servers = [
         MCPServerStdio(
             name="Research Tools",
@@ -62,16 +62,16 @@ async def main():
             },
         ),
     ]
-    
+
     async with (
         servers[0] as research_srv,
         servers[1] as thinking_srv,
         servers[2] as fs_srv,
-    ): 
+    ):
         goal = """
         Produce a research plan to find the book 'The Hitchhiker's Guide to the Galaxy'.
         """
-        
+
         print("Running...", goal)
         research_agent.mcp_servers = [research_srv]
         result = await Runner.run(research_agent, goal)
@@ -80,9 +80,7 @@ async def main():
         filesystem_agent.mcp_servers = [fs_srv]
         result = await Runner.run(filesystem_agent, result.final_output)
         print(result.final_output)
-        
+
 
 if __name__ == "__main__":
     asyncio.run(main())
-        
-        

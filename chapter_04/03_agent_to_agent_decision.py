@@ -27,7 +27,7 @@ async def main():
             Do not make up or invent any research sources.
         """,
     )
-    
+
     thinking_agent = Agent(
         model=model,
         name="Thinking Agent",
@@ -36,7 +36,7 @@ async def main():
             Your role is to plan the research.
         """,
     )
-    
+
     filesystem_agent = Agent(
         model=model,
         name="Filesystem Agent",
@@ -46,8 +46,7 @@ async def main():
             Never make up or invent any ouput.
         """,
     )
-    
-    
+
     # Init servers
     servers = [
         MCPServerStdio(
@@ -82,11 +81,11 @@ async def main():
         goal = """
             Produce a research plan to find the book 'Bayesian Data Analysis'
         """
-        
+
         print("Running...", goal)
         research_agent.mcp_servers = [research_srv]
         result = await Runner.run(research_agent, goal)
-        
+
         # Extract the research sources from the result
         research_sources = result.final_output.research_sources
         if research_sources and len(research_sources) > 0:

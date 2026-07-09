@@ -1,4 +1,4 @@
-import asyncio 
+import asyncio
 from agents import Agent, Runner, function_tool
 from setup_openai import model
 
@@ -9,6 +9,7 @@ def travel_back(year: int, years: int) -> int:
     """Travel back in time by a certain number of years."""
     return year - years
 
+
 @function_tool
 def travel_forward(year: int, years: int) -> int:
     """Travel forward in time by a certain number of years."""
@@ -16,7 +17,7 @@ def travel_forward(year: int, years: int) -> int:
 
 
 react_agent = Agent(
-    model=model, 
+    model=model,
     name="TimeTravelerReAct",
     instructions="""
     You are a time travel assistant. You have tools 'travel_back' and 'travel_forward' to perform time jumps.
@@ -24,7 +25,7 @@ react_agent = Agent(
     After using a tool, reflect on the result and continue reasoning.
     After gathering information, provide the final answer.
     """,
-    tools=[travel_back, travel_forward]
+    tools=[travel_back, travel_forward],
 )
 
 problem = """(
@@ -33,11 +34,6 @@ problem = """(
     "and finally go 5 years back again. What year do I end up in?"
 )"""
 
-result = asyncio.run(
-    Runner.run(
-        react_agent, 
-        input=problem
-    )
-)
+result = asyncio.run(Runner.run(react_agent, input=problem))
 
 print(result.final_output)

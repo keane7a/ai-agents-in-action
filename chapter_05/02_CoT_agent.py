@@ -1,14 +1,14 @@
-import asyncio 
+import asyncio
 from agents import Agent, Runner
-from setup_openai import model 
+from setup_openai import model
 
 cot_agent = Agent(
     model=model,
-    name="TimeTravelerCoT", 
+    name="TimeTravelerCoT",
     instructions="""(
     "You are a time travel problem solver.", 
     "Work out the solution step by step, then give the final answer." 
-    )"""
+    )""",
 )
 
 question = (
@@ -16,11 +16,6 @@ question = (
     "What year did you end up in?"
 )
 
-result = asyncio.run(
-    Runner.run(
-        cot_agent, 
-        input=question
-    )
-)
+result = asyncio.run(Runner.run(cot_agent, input=question))
 
 print(result.final_output)

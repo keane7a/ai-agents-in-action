@@ -1,7 +1,7 @@
 from agents import Agent, Runner
 from setup_openai import model
 
-# Building the agent. 
+# Building the agent.
 instructions = """
 You are a research planning assistant.
 
@@ -11,17 +11,10 @@ You are a research planning assistant.
 - Output 5 concise tasks (5 words or less) to your plan.
 """
 
-agent = Agent(
-    name="Research Planner", 
-    instructions=instructions, 
-    model=model
-)
+agent = Agent(name="Research Planner", instructions=instructions, model=model)
 
 input = "learn about AI agents"
 
-result = Runner.run_sync(
-    agent, 
-    input
-)
+result = Runner.run_sync(agent, input)
 
 print(result.final_output)

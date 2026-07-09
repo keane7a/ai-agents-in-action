@@ -13,23 +13,24 @@ You are a research planning assistant.
 - Output 5 concise tasks (5 words or less) to your plan.
 """
 
-class ResearchPlanModel(BaseModel): 
+
+class ResearchPlanModel(BaseModel):
     task: List[str]
     """A list of task to perform for research."""
-    
+
 
 agent = Agent(
-    name="Research Planner", 
+    name="Research Planner",
     instructions=instructions,
     output_type=ResearchPlanModel,
-    model=model
-    )
+    model=model,
+)
 
 input = "learn about AI agents"
 
 result = Runner.run_sync(
-    agent, 
+    agent,
     input=input,
-    )
+)
 
 print(result.final_output)

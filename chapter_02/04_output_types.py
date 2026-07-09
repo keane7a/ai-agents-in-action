@@ -14,46 +14,48 @@ You are a research planning assistant.
 - Output 5 concise tasks (5 words or less) to your plan in the format of Dict[int, str]
 """
 
-# class ResearchPlanModel(BaseModel): 
+# class ResearchPlanModel(BaseModel):
 #     tasks: Dict[int, str]
 #     """A list of task to perform for research."""
-    
-# Example of Strict JSON schema is enabled, but the output type is not valid. 
+
+# Example of Strict JSON schema is enabled, but the output type is not valid.
 # Either make the output type strict, or pass output_schema_strict=False to your Agent()
 #
 # agent = Agent(
-#     name="Research Planner", 
+#     name="Research Planner",
 #     instructions=instructions,
 #     model=model,
 #     output_type=ResearchPlanModel
 # )
 
 
-# Fixed output type error 
+# Fixed output type error
 
-class Task(TypedDict): 
+
+class Task(TypedDict):
     id: int
     description: str
 
-class ResearchPlanModel(BaseModel): 
+
+class ResearchPlanModel(BaseModel):
     tasks: list[Task]
     """A list of task to perform for research."""
-    
+
     model_config = ConfigDict(extra="forbid")
 
 
 agent = Agent(
-    name="Research Planner", 
+    name="Research Planner",
     instructions=instructions,
     model=model,
-    output_type=ResearchPlanModel
+    output_type=ResearchPlanModel,
 )
 
 input = "learn about AI agents"
 
 result = Runner.run_sync(
-    agent, 
+    agent,
     input=input,
-    )
+)
 
 print(result.final_output)

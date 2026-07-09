@@ -1,22 +1,23 @@
-import asyncio 
-import os 
-from pathlib import Path 
-from typing import List 
+import asyncio
+import os
+from pathlib import Path
+from typing import List
 
-from agents import Agent, Runner 
+from agents import Agent, Runner
 from agents.mcp import MCPServerStdio, MCPServerStdioParams
-from pydantic import BaseModel 
+from pydantic import BaseModel
 from setup_openai import model
 
 SANDBOX = os.path.dirname(os.path.abspath(__file__))
 SCRIPT = Path(__file__).with_name("01_research_tools_mcp_server.py").resolve()
 
-async def main(): 
-    class ResearchSourcesModel(BaseModel): 
+
+async def main():
+    class ResearchSourcesModel(BaseModel):
         research_sources: List[str]
         """A list of research sources to use for research."""
-        
-    # Init agents 
+
+    # Init agents
     research_agent = Agent(
         model=model,
         name="Research Agent",
@@ -28,7 +29,7 @@ async def main():
             Always hand off to the thinking agent.
         """,
     )
-    
+
     thinking_agent = Agent(
         model=model,
         name="Thinking Agent",
@@ -40,7 +41,7 @@ async def main():
             Always hand off to the filesystem agent.
         """,
     )
-    
+
     filesystem_agent = Agent(
         model=model,
         name="Filesystem Agent",
@@ -50,7 +51,7 @@ async def main():
             Never make up or invent any ouput.
         """,
     )
-    
+
     # Init servers
     servers = [
         MCPServerStdio(
@@ -75,7 +76,7 @@ async def main():
             },
         ),
     ]
-    
+
     # Open servers
     async with (
         servers[0] as research_srv,

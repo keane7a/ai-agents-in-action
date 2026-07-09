@@ -20,26 +20,27 @@ from setup_openai import model
 SANDBOX = os.path.dirname(os.path.abspath(__file__))
 SCRIPT = Path(__file__).with_name("01_research_tools_mcp_server.py").resolve()
 
-class ResearchOutputModel(BaseModel): 
+
+class ResearchOutputModel(BaseModel):
     """Output model for research agent."""
-    
+
     research_plan: str
     """The final research plan as text."""
     research_plan_file: str
     """The path to the research plan file."""
     is_sufficiently_detailed: bool
     """Flag to indicate if the research plan is sufficiently detailed."""
-    
+
 
 class ResearchInputModel(BaseModel):
     """Input model for research agent."""
-    
+
     research_validation: str
     """The research goal to achieve."""
     is_research_forbidden: bool
     """Flag to indicate if the research is forbidden."""
-    
-    
+
+
 input_guardrail_agent = Agent(
     model=model,
     name="Input Guardrail Agent",
@@ -51,16 +52,18 @@ input_guardrail_agent = Agent(
     output_type=ResearchInputModel,
 )
 
+
 @input_guardrail
 async def research_guardrail(
     ctx: RunContextWrapper[None], agent: Agent, input: str | list[TResponseInputItem]
 ) -> GuardrailFunctionOutput:
     result = await Runner.run(input_guardrail_agent, input, context=ctx.context)
-    
+
     return GuardrailFunctionOutput(
         output_info=result.final_output.research_validation,
         tripwire_triggered=result.final_output.is_research_forbidden,
     )
+
 
 output_guardrail_agent = Agent(
     model=model,
@@ -84,7 +87,7 @@ async def research_output_guardrail(
     )
 
 
-async def main(): 
+async def main():
     # Init servers
     servers = [
         MCPServerStdio(
@@ -116,7 +119,7 @@ async def main():
     Then, use the sequential thinking tool to plan the research.
     Finally, use the filesystem tool to write the research plan as a text file.
     """
-    
+
     # Open servers
     async with (
         servers[0] as research_srv,
@@ -140,16 +143,20 @@ async def main():
             result = await Runner.run(agent, goal)
             print(result.final_output)
         except InputGuardrailTripwireTriggered as input_tripped:
-            print(f"""
+            print(
+                f"""
             Input guardrail tripwire triggered: 
             {input_tripped.guardrail_result.output.output_info}
-            """)
+            """
+            )
         except OutputGuardrailTripwireTriggered as output_tripped:
-            print(f"""
+            print(
+                f"""
             Output guardrail tripwire triggered: 
             {output_tripped.guardrail_result.output.output_info}
-            """)
-            
+            """
+            )
+
             print("Done")
 
 

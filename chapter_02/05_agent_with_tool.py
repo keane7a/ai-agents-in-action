@@ -18,6 +18,7 @@ only to use the available research sources.
 available research sources will be used for each task.
 """
 
+
 class Task(TypedDict):
     step: int
     """Task Step"""
@@ -26,10 +27,11 @@ class Task(TypedDict):
     description: str
     """Task description"""
 
-class ResearchPlanModel(BaseModel): 
+
+class ResearchPlanModel(BaseModel):
     task: list[Task]
     """Numbered task for research"""
-    
+
     model_config = ConfigDict(extra="forbid")
 
 
@@ -37,28 +39,27 @@ class ResearchPlanModel(BaseModel):
 def get_research_sources() -> list[str]:
     """Provide a list of research sources"""
     search_sources = [
-        "Wikipedia", 
-        "Google", 
+        "Wikipedia",
+        "Google",
         "YouTube",
     ]
-    
+
     return search_sources
 
 
 agent = Agent(
     model=model,
-    name="Research Planner", 
+    name="Research Planner",
     instructions=instructions,
     output_type=ResearchPlanModel,
     tools=[get_research_sources],
-
 )
 
 input = "learn about AI agents"
 
 result = Runner.run_sync(
-    agent, 
+    agent,
     input=input,
-    )
+)
 
 print(result.final_output)

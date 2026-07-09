@@ -32,10 +32,12 @@ fs_srv = MCPServerStdio(
     },
 )
 
+
 class ResearchSourcesModel(BaseModel):
     research_sources: List[str]
     """A list of research sources to use for research."""
-    
+
+
 @function_tool
 async def research_agent(instructions: str) -> ResearchSourcesModel:
     """
@@ -55,7 +57,7 @@ async def research_agent(instructions: str) -> ResearchSourcesModel:
     async with research_srv:
         result = await Runner.run(agent, instructions)
         return result.final_output
-    
+
 
 @function_tool
 async def filesystem_agent(instructions: str) -> str:
@@ -91,11 +93,12 @@ orchestration_agent = Agent(
     tools=[research_agent, filesystem_agent],
 )
 
-async def main(): 
-    async with thinking_srv: 
+
+async def main():
+    async with thinking_srv:
         goal = "Produce a research plan to find the book 'The Hitchhiker's Guide to the Galaxy'"
         orchestration_agent.mcp_servers = [thinking_srv]
-        
+
         print("Running...", goal)
         result = await Runner.run(
             orchestration_agent,
@@ -103,6 +106,7 @@ async def main():
             max_turns=25,
         )
         print(result.final_output)
-    
+
+
 if __name__ == "__main__":
     asyncio.run(main())

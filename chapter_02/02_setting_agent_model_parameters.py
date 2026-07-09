@@ -2,7 +2,7 @@ from agents import Agent, Runner, ModelSettings
 from setup_openai import model
 
 
-# Building the agent. 
+# Building the agent.
 instructions = """
 You are a research planning assistant.
 
@@ -13,23 +13,20 @@ You are a research planning assistant.
 """
 
 agent = Agent(
-    name="Research Planner", 
-    instructions=instructions, 
+    name="Research Planner",
+    instructions=instructions,
     model=model,
     model_settings=ModelSettings(
         temperature=1,
         max_tokens=150,
-        top_p=1, 
+        top_p=1,
         # frequency_penalty=0.5,
         # presence_penalty=0.5
-    )
+    ),
 )
 
 input = "learn about AI agents"
 
-result = Runner.run_sync(
-    agent, 
-    input
-)
+result = Runner.run_sync(agent, input)
 
 print(result.final_output)
