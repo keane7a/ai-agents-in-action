@@ -1,8 +1,7 @@
 import asyncio
-
 from agents import Agent, Runner
 from agents.mcp import MCPServerStdio
-
+from setup_openai import model
 
 async def main():
     memory_srv = MCPServerStdio(
@@ -66,6 +65,7 @@ async def main():
     # …then open them all at once
     async with memory_srv:
         agent = Agent(
+            model=model, 
             name="Memory Agent",
             instructions=instructions,
             mcp_servers=[memory_srv],
