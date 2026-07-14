@@ -11,4 +11,4 @@ client = AsyncOpenAI(
     base_url="https://generativelanguage.googleapis.com/v1beta/openai/",
 )
 
-model = OpenAIChatCompletionsModel(model="gemini-3.1-flash-lite", openai_client=client)
+model = OpenAIChatCompletionsModel(model="gemini-3.5-flash", openai_client=client)
