@@ -1,5 +1,6 @@
 from pydantic import BaseModel, Field
 from agents import Agent
+from setup_openai import model
 
 
 class EvaluationResult(BaseModel):
@@ -11,6 +12,7 @@ class EvaluationResult(BaseModel):
 
 
 evaluation_agent = Agent(
+    model=model,
     name="Evaluator",
     instructions="""
     You are the evaluation module of a cognitive agent.
