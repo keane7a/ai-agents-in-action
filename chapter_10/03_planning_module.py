@@ -2,7 +2,7 @@ from pydantic import BaseModel, Field
 from enum import Enum
 from agents import Agent
 from _01_cognitive_workspace import StrategyType
-
+from setup_openai import model
 
 class PlanOutput(BaseModel):
     strategy_type: StrategyType
@@ -11,6 +11,7 @@ class PlanOutput(BaseModel):
 
 
 planning_agent = Agent(
+    model=model,
     name="Planner",
     instructions="""You are the planning module of a cognitive agent.
     You receive a task representation from the perception module and
