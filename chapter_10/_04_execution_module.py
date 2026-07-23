@@ -32,6 +32,6 @@ execution_agent = Agent(
     instead of content should get a low relevance_score and a
     quality_note explaining why.
     """,
-    mcp_servers=[search_server],
+    #mcp_servers=[search_server],
     output_type=Finding,
 )

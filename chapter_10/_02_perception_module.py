@@ -1,8 +1,10 @@
+from pyexpat import model
+
 from pydantic import BaseModel, Field
 from enum import Enum
 from agents import Agent
 from _01_cognitive_workspace import TaskType
-
+from setup_openai import model
 
 
 class TaskRepresentation(BaseModel):
@@ -13,6 +15,7 @@ class TaskRepresentation(BaseModel):
 
 
 perception_agent = Agent(
+   model=model,
     name="Perception",
     instructions="""
     You are the perception module of a cognitive agent.
