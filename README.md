@@ -13,3 +13,7 @@
 ## Chapter 07: Building robust agent through test-driven agent development (TDAD)
 
 ## Chapter 08: Deploying agents and agentic systems
+
+## Chapter 09: Developing agentic loop
+
+## Chapter 10: Explore cognitive agents that thinks, monitors, and adapts. 
